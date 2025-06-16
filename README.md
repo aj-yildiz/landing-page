@@ -15,4 +15,3 @@ Any changes you make to your deployed app will be automatically pushed to this r
 The project is live at:
 
 **[https://vercel.com/yildize-northeasterns-projects/v0-vastis-landing-page](https://vercel.com/yildize-northeasterns-projects/v0-vastis-landing-page)**
-
