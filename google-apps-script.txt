@@ -1,0 +1,64 @@
+/**
+ * Google Apps Script to save form submissions to a Google Sheet
+ * 
+ * How to set up:
+ * 1. Create a new Google Sheet with columns: Email, Timestamp, Source
+ * 2. Go to Extensions > Apps Script
+ * 3. Replace the default code with this script
+ * 4. Deploy as a web app:
+ *    - Click Deploy > New deployment
+ *    - Select type: Web app
+ *    - Set "Who has access" to "Anyone" or "Anyone, even anonymous"
+ *    - Click Deploy
+ *    - Copy the web app URL
+ * 5. Add this URL as GOOGLE_SCRIPT_URL environment variable in your Vercel project
+ */
+
+// The doPost function handles POST requests to the web app
+function doPost(e) {
+  try {
+    // Get the parameters from the request
+    var email = e.parameter.email;
+    var timestamp = e.parameter.timestamp || new Date().toISOString();
+    var source = e.parameter.source || 'Website';
+    
+    // Log the received data for debugging
+    Logger.log("Received data: " + JSON.stringify(e.parameter));
+    
+    // Get the active spreadsheet and sheet
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Waitlist') || ss.insertSheet('Waitlist');
+    
+    // If this is a new sheet, add headers
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['Email', 'Timestamp', 'Source']);
+    }
+    
+    // Add the new submission
+    sheet.appendRow([email, timestamp, source]);
+    
+    // Return success response
+    return ContentService.createTextOutput(JSON.stringify({
+      'success': true,
+      'message': 'Email saved successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    // Log the error
+    Logger.log("Error: " + error.toString());
+    
+    // Return error response
+    return ContentService.createTextOutput(JSON.stringify({
+      'success': false,
+      'message': 'Error: ' + error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// The doGet function handles GET requests (optional, for testing)
+function doGet() {
+  return ContentService.createTextOutput(JSON.stringify({
+    'status': 'active',
+    'message': 'The API is working. Use POST to submit data.'
+  })).setMimeType(ContentService.MimeType.JSON);
+}
