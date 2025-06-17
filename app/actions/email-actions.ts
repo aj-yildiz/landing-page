@@ -1,109 +1,192 @@
 "use server"
 
-import fs from "fs/promises"
-import path from "path"
+import { createClient } from "@supabase/supabase-js"
 
 type SubscribeResult = {
   success: boolean
   message: string
+  data?: any
 }
 
-/**
- * Adds an email to the waitlist and stores it locally as a fallback
- */
+type WaitlistEntry = {
+  id?: string
+  email: string
+  timestamp: string
+  source: string
+  created_at?: string
+  updated_at?: string
+}
+
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase environment variables")
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey)
+}
+
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
 export async function subscribeToWaitlist(email: string): Promise<SubscribeResult> {
   try {
-    // Validate email
-    if (!email || !email.includes("@") || !email.includes(".")) {
+    if (!email || typeof email !== "string") {
+      return {
+        success: false,
+        message: "Email is required",
+      }
+    }
+
+    if (!isValidEmail(email)) {
       return {
         success: false,
         message: "Please provide a valid email address",
       }
     }
 
-    // Log the email for debugging and as a backup
-    console.log(`New waitlist signup: ${email}`)
-
-    // Store the email locally as a fallback
-    await storeEmailLocally(email)
-
-    // Always return success to the user
-    return {
-      success: true,
-      message: "Thank you for joining our waitlist!",
-    }
-  } catch (error) {
-    console.error("Error in subscribeToWaitlist:", error)
-
-    // Even if there's an error, we'll still tell the user their signup was successful
-    return {
-      success: true,
-      message: "Thank you for joining our waitlist!",
-    }
-  }
-}
-
-/**
- * Stores the email locally in a JSON file as a fallback mechanism
- */
-async function storeEmailLocally(email: string): Promise<void> {
-  try {
-    // Create a data object with the email and timestamp
-    const data = {
-      email,
+    const waitlistEntry: WaitlistEntry = {
+      email: email.toLowerCase().trim(),
       timestamp: new Date().toISOString(),
       source: "Website Waitlist",
     }
 
-    // Log the data we're storing
-    console.log("Storing email locally:", data)
+    console.log("=== NEW WAITLIST SIGNUP ATTEMPT ===")
+    console.log("Email:", waitlistEntry.email)
+    console.log("Timestamp:", waitlistEntry.timestamp)
+    console.log("Source:", waitlistEntry.source)
 
-    // Get the path to the data directory
-    const dataDir = path.join(process.cwd(), "data")
-    const filePath = path.join(dataDir, "waitlist-emails.json")
-
-    // Create the data directory if it doesn't exist
     try {
-      await fs.mkdir(dataDir, { recursive: true })
-    } catch (err) {
-      // Directory might already exist, that's fine
+      const supabase = createSupabaseClient()
+
+      const { data: existingEntry, error: checkError } = await supabase
+        .from("waitlist")
+        .select("email")
+        .eq("email", waitlistEntry.email)
+        .single()
+
+      if (checkError && checkError.code !== "PGRST116") {
+        throw checkError
+      }
+
+      if (existingEntry) {
+        console.log("Email already exists in waitlist:", waitlistEntry.email)
+        return {
+          success: true,
+          message: "You're already on our waitlist! We'll notify you when Vastis launches.",
+        }
+      }
+
+      const { data, error } = await supabase.from("waitlist").insert([waitlistEntry]).select().single()
+
+      if (error) {
+        throw error
+      }
+
+      console.log("Successfully added to Supabase waitlist:", data)
+      console.log("=====================================")
+
+      await sendToGoogleSheetsBackup(waitlistEntry)
+
+      return {
+        success: true,
+        message: "Thank you for joining our waitlist! We'll notify you when Vastis launches.",
+        data: data,
+      }
+    } catch (supabaseError) {
+      console.error("Supabase error:", supabaseError)
+      console.log("FALLBACK - Email logged for manual processing:", waitlistEntry.email)
+
+      return {
+        success: true,
+        message: "Thank you for joining our waitlist!",
+      }
     }
-
-    // Read existing data or create an empty array
-    let emails = []
-    try {
-      const fileContent = await fs.readFile(filePath, "utf8")
-      emails = JSON.parse(fileContent)
-    } catch (err) {
-      // File might not exist yet, that's fine
-    }
-
-    // Add the new email
-    emails.push(data)
-
-    // Write the updated data back to the file
-    await fs.writeFile(filePath, JSON.stringify(emails, null, 2), "utf8")
-
-    console.log(`Email stored locally: ${email}`)
   } catch (error) {
-    console.error("Error storing email locally:", error)
-    // Don't throw the error, just log it
+    console.error("Unexpected error in subscribeToWaitlist:", error)
+
+    console.log("CRITICAL - Manual processing required for email:", email)
+
+    return {
+      success: true,
+      message: "Thank you for joining our waitlist!",
+    }
   }
 }
 
-/**
- * IMPORTANT NOTE ABOUT GOOGLE SHEETS INTEGRATION:
- *
- * The direct integration with Google Sheets from a server-side function is failing due to
- * network/CORS restrictions. As a workaround, we're storing emails locally in a JSON file.
- *
- * To get these emails into Google Sheets, you have a few options:
- *
- * 1. Download the JSON file periodically and import it into Google Sheets
- * 2. Create a client-side form that submits directly to Google Forms
- * 3. Use a service like Zapier or Make to connect your application to Google Sheets
- * 4. Set up a proper Google Sheets API integration with OAuth authentication
- *
- * For now, all emails are safely stored in the data/waitlist-emails.json file
- * and also logged to the console for backup.
- */
+async function sendToGoogleSheetsBackup(entry: WaitlistEntry): Promise<void> {
+  try {
+    const googleScriptUrl = process.env.GOOGLE_SCRIPT_URL
+
+    if (!googleScriptUrl) {
+      console.log("Google Sheets backup not configured (GOOGLE_SCRIPT_URL not set)")
+      return
+    }
+
+    const formData = new URLSearchParams()
+    formData.append("email", entry.email)
+    formData.append("timestamp", entry.timestamp)
+    formData.append("source", entry.source)
+
+    const response = await fetch(googleScriptUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    })
+
+    if (response.ok) {
+      console.log("Successfully sent to Google Sheets backup")
+    } else {
+      console.log("Failed to send to Google Sheets backup (non-critical)")
+    }
+  } catch (error) {
+    console.log("Google Sheets backup failed (non-critical):", error)
+  }
+}
+
+export async function getWaitlistEntries(): Promise<SubscribeResult> {
+  try {
+    const supabase = createSupabaseClient()
+
+    const { data, error } = await supabase.from("waitlist").select("*").order("created_at", { ascending: false })
+
+    if (error) {
+      throw error
+    }
+
+    return {
+      success: true,
+      message: "Waitlist entries retrieved successfully",
+      data: data,
+    }
+  } catch (error) {
+    console.error("Error retrieving waitlist entries:", error)
+    return {
+      success: false,
+      message: "Failed to retrieve waitlist entries",
+    }
+  }
+}
+
+export async function getWaitlistCount(): Promise<number> {
+  try {
+    const supabase = createSupabaseClient()
+
+    const { count, error } = await supabase.from("waitlist").select("*", { count: "exact", head: true })
+
+    if (error) {
+      throw error
+    }
+
+    return count || 0
+  } catch (error) {
+    console.error("Error getting waitlist count:", error)
+    return 0
+  }
+}

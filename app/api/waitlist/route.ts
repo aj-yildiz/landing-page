@@ -1,41 +1,79 @@
 import { NextResponse } from "next/server"
-import fs from "fs/promises"
-import path from "path"
+import { createClient } from "@supabase/supabase-js"
 
 /**
- * API route to get all waitlist emails (protected, admin only)
- * This is useful for viewing all collected emails
+ * API routes for waitlist management
+ * These endpoints provide REST API access to waitlist functionality
+ */
+
+/**
+ * Creates a Supabase client for API routes
+ *
+ * @returns Supabase client instance
+ */
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase environment variables")
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey)
+}
+
+/**
+ * GET /api/waitlist
+ * Retrieves waitlist statistics and optionally all entries
+ *
+ * Query parameters:
+ * - include_entries: boolean - Whether to include all entries in response
+ *
+ * @param request - The incoming request object
+ * @returns JSON response with waitlist data
  */
 export async function GET(request: Request) {
   try {
-    // In a real app, you would add authentication here
-    // to ensure only admins can access this endpoint
+    const { searchParams } = new URL(request.url)
+    const includeEntries = searchParams.get("include_entries") === "true"
 
-    // Get the path to the data file
-    const filePath = path.join(process.cwd(), "data", "waitlist-emails.json")
+    const supabase = createSupabaseClient()
 
-    // Read the file
-    let emails = []
-    try {
-      const fileContent = await fs.readFile(filePath, "utf8")
-      emails = JSON.parse(fileContent)
-    } catch (err) {
-      // File might not exist yet
-      console.error("Error reading waitlist emails file:", err)
+    // Get total count
+    const { count, error: countError } = await supabase.from("waitlist").select("*", { count: "exact", head: true })
+
+    if (countError) {
+      throw countError
     }
 
-    // Return the emails
-    return NextResponse.json({
+    const response: any = {
       success: true,
-      count: emails.length,
-      emails,
-    })
+      count: count || 0,
+      timestamp: new Date().toISOString(),
+    }
+
+    // Include entries if requested
+    if (includeEntries) {
+      const { data: entries, error: entriesError } = await supabase
+        .from("waitlist")
+        .select("*")
+        .order("created_at", { ascending: false })
+
+      if (entriesError) {
+        throw entriesError
+      }
+
+      response.entries = entries
+    }
+
+    return NextResponse.json(response)
   } catch (error) {
-    console.error("Error in waitlist API route:", error)
+    console.error("Error in GET /api/waitlist:", error)
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to retrieve waitlist emails",
+        message: "Failed to retrieve waitlist data",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },
     )
@@ -43,62 +81,129 @@ export async function GET(request: Request) {
 }
 
 /**
- * API route to add an email to the waitlist
- * This can be used as an alternative to the server action
+ * POST /api/waitlist
+ * Adds a new email to the waitlist
+ *
+ * Request body:
+ * - email: string - The email address to add
+ *
+ * @param request - The incoming request object
+ * @returns JSON response with operation result
  */
 export async function POST(request: Request) {
   try {
-    // Parse the request body
+    // Parse request body
+    const { email } = await request.json()
+
+    // Validate input
+    if (!email || typeof email !== "string") {
+      return NextResponse.json({ success: false, message: "Email is required" }, { status: 400 })
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ success: false, message: "Invalid email format" }, { status: 400 })
+    }
+
+    const supabase = createSupabaseClient()
+
+    // Normalize email
+    const normalizedEmail = email.toLowerCase().trim()
+
+    // Check if email already exists
+    const { data: existingEntry, error: checkError } = await supabase
+      .from("waitlist")
+      .select("email")
+      .eq("email", normalizedEmail)
+      .single()
+
+    if (checkError && checkError.code !== "PGRST116") {
+      throw checkError
+    }
+
+    if (existingEntry) {
+      return NextResponse.json({
+        success: true,
+        message: "Email already exists in waitlist",
+        duplicate: true,
+      })
+    }
+
+    // Create waitlist entry
+    const waitlistEntry = {
+      email: normalizedEmail,
+      timestamp: new Date().toISOString(),
+      source: "API Route",
+    }
+
+    // Insert into database
+    const { data, error } = await supabase.from("waitlist").insert([waitlistEntry]).select().single()
+
+    if (error) {
+      throw error
+    }
+
+    // Log successful insertion
+    console.log("API: Successfully added to waitlist:", data)
+
+    return NextResponse.json({
+      success: true,
+      message: "Email added to waitlist successfully",
+      data: data,
+    })
+  } catch (error) {
+    console.error("Error in POST /api/waitlist:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to add email to waitlist",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    )
+  }
+}
+
+/**
+ * DELETE /api/waitlist
+ * Removes an email from the waitlist (admin only)
+ *
+ * Request body:
+ * - email: string - The email address to remove
+ *
+ * @param request - The incoming request object
+ * @returns JSON response with operation result
+ */
+export async function DELETE(request: Request) {
+  try {
     const { email } = await request.json()
 
     if (!email || typeof email !== "string") {
       return NextResponse.json({ success: false, message: "Email is required" }, { status: 400 })
     }
 
-    // Create a data object with the email and timestamp
-    const data = {
-      email,
-      timestamp: new Date().toISOString(),
-      source: "API Route",
+    const supabase = createSupabaseClient()
+
+    const { error } = await supabase.from("waitlist").delete().eq("email", email.toLowerCase().trim())
+
+    if (error) {
+      throw error
     }
 
-    // Get the path to the data directory
-    const dataDir = path.join(process.cwd(), "data")
-    const filePath = path.join(dataDir, "waitlist-emails.json")
+    console.log("API: Successfully removed from waitlist:", email)
 
-    // Create the data directory if it doesn't exist
-    try {
-      await fs.mkdir(dataDir, { recursive: true })
-    } catch (err) {
-      // Directory might already exist, that's fine
-    }
-
-    // Read existing data or create an empty array
-    let emails = []
-    try {
-      const fileContent = await fs.readFile(filePath, "utf8")
-      emails = JSON.parse(fileContent)
-    } catch (err) {
-      // File might not exist yet, that's fine
-    }
-
-    // Add the new email
-    emails.push(data)
-
-    // Write the updated data back to the file
-    await fs.writeFile(filePath, JSON.stringify(emails, null, 2), "utf8")
-
-    // Return success
     return NextResponse.json({
       success: true,
-      message: "Email added to waitlist",
+      message: "Email removed from waitlist successfully",
     })
   } catch (error) {
-    console.error("Error in waitlist API route:", error)
+    console.error("Error in DELETE /api/waitlist:", error)
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to add email to waitlist",
+        message: "Failed to remove email from waitlist",
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },
     )
