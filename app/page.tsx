@@ -35,43 +35,40 @@ export default function LandingPage() {
         </div>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-8 text-center">
-              <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
-                <span className="font-medium">Coming Soon</span>
-                <span className="ml-2 rounded-md bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">Beta</span>
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 flex flex-col items-center justify-center text-center">
+          <div className="w-full flex flex-col items-center justify-center text-center">
+            <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm mx-auto">
+              <span className="font-medium">Coming Soon</span>
+              <span className="ml-2 rounded-md bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">Beta</span>
+            </div>
+            <div className="space-y-4 mt-6">
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-black text-center leading-tight">
+                Be the First to Experience Vastis
+              </h1>
+              <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
+                Join the waitlist for early access to the platform that's changing how people connect, create, and collaborate online.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
+              <Button asChild size="lg" className="bg-[#245FCB] text-white">
+                <Link href="#signup">
+                  Join Waitlist
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            <div className="flex items-center space-x-4 text-sm mt-6">
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="h-4 w-4 text-primary" />
+                <span>Free Trial</span>
               </div>
-              <div className="space-y-4">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-black">
-                  Be the First to Experience Vastis
-                </h1>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Join the waitlist for early access to the platform that's changing how people connect, create, and
-                  collaborate online.
-                </p>
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="h-4 w-4 text-primary" />
+                <span>No Credit Card</span>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button asChild size="lg" className="bg-[#245FCB] text-white">
-                  <Link href="#signup">
-                    Join Waitlist
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-              <div className="flex items-center space-x-4 text-sm">
-                <div className="flex items-center space-x-1">
-                  <CheckCircle className="h-4 w-4 text-primary" />
-                  <span>Free Trial</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <CheckCircle className="h-4 w-4 text-primary" />
-                  <span>No Credit Card</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <CheckCircle className="h-4 w-4 text-primary" />
-                  <span>Cancel Anytime</span>
-                </div>
+              <div className="flex items-center space-x-1">
+                <CheckCircle className="h-4 w-4 text-primary" />
+                <span>Cancel Anytime</span>
               </div>
             </div>
           </div>
@@ -83,8 +80,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-black">What is Vastis?</h2>
                 <p className="mx-auto max-w-[700px] text-black md:text-xl/relaxed">
-                  Vastis is a revolutionary digital platform designed to streamline workflows, enhance collaboration,
-                  and empower teams to achieve extraordinary results in today's fast-paced digital landscape.
+                  Vastis is a three sided digital platform designed to help gyms, practitioners and patients connect. Our flexible model allows practicioners to work with multiple gyms and gym to monetize their spaces. 
                 </p>
               </div>
             </div>
@@ -195,23 +191,21 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="cta" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Ready to Get Started?</h2>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                  Join thousands of satisfied users who are already using Vastis to transform their digital experience.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button asChild size="lg" className="bg-[#245FCB] text-white">
-                  <Link href="#signup">
-                    Join Waitlist
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+        <section id="cta" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex flex-col items-center justify-center text-center">
+          <div className="w-full flex flex-col items-center justify-center text-center">
+            <div className="space-y-2">
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-black text-center leading-tight">Ready to Get Started?</h2>
+              <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
+                Join thousands of satisfied users who are already using Vastis to transform their digital experience.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
+              <Button asChild size="lg" className="bg-[#245FCB] text-white">
+                <Link href="#signup">
+                  Join Waitlist
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
