@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   metadataBase: new URL('https://vastis.app'),
   openGraph: {
-    title: 'Vastis – AI-Powered Healthcare Assistant',
-    description: 'Join the waitlist for Vastis, your personalized AI companion for managing healthcare effectively.',
+    title: 'Bridging the Gap Between Practitioners and Patients',
+    description: 'Join the waitlist for Vastis as a gym or practicioner to get access to the platform.',
     url: 'https://vastis.app',
     siteName: 'Vastis',
     images: [
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vastis – AI-Powered Healthcare Assistant',
-    description: 'Join the waitlist for Vastis, your personalized AI companion for managing healthcare effectively.',
+    title: 'Vastis',
+    description: 'Join the waitlist for Vastis.',
     //images: ['/og-image.png'], // 🔁 This image should be inside the /public folder
   },
 }
