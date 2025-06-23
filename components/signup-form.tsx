@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CheckCircle } from "lucide-react"
 import { subscribeToWaitlist } from "@/app/actions/email-actions"
+import { RadioGroup } from '@radix-ui/react-radio-group'
 
 export default function SignupForm() {
   const [email, setEmail] = useState("")
+  const [userType, setUserType] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -27,10 +29,15 @@ export default function SignupForm() {
       setLoading(false)
       return
     }
+    if (!userType) {
+      setError("Please select a user type")
+      setLoading(false)
+      return
+    }
 
     try {
-      // Call the server action to store the email
-      const result = await subscribeToWaitlist(email)
+      // Call the server action to store the email and userType
+      const result = await subscribeToWaitlist(email, userType)
 
       if (result.success) {
         setSubmitted(true)
@@ -40,7 +47,6 @@ export default function SignupForm() {
       }
     } catch (err) {
       console.error("Error in form submission:", err)
-      // Even if there's an error, we'll still show success to the user
       setSubmitted(true)
       setMessage("Thank you for joining our waitlist!")
     } finally {
@@ -54,7 +60,7 @@ export default function SignupForm() {
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <CheckCircle className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="text-xl font-bold">Thank You!</h3>
+        <h3 className="text-xl font-bold text-black">Thank You!</h3>
         <p className="text-center text-muted-foreground">{message}</p>
       </div>
     )
@@ -71,18 +77,37 @@ export default function SignupForm() {
           required
           className="w-full"
         />
+        <RadioGroup
+          className="flex justify-between my-2"
+          value={userType}
+          onValueChange={setUserType}
+          required
+        >
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="userType" value="patient" checked={userType === 'patient'} onChange={() => setUserType('patient')} className="accent-[#245FCB]" />
+            <span className="text-black">Patient</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="userType" value="practitioner" checked={userType === 'practitioner'} onChange={() => setUserType('practitioner')} className="accent-[#245FCB]" />
+            <span className="text-black">Practitioner</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="userType" value="gym" checked={userType === 'gym'} onChange={() => setUserType('gym')} className="accent-[#245FCB]" />
+            <span className="text-black">Gym</span>
+          </label>
+        </RadioGroup>
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
-      <Button type="submit" className="w-full" disabled={loading}>
+      <Button type="submit" className="w-full bg-[#245FCB] text-white" disabled={loading}>
         {loading ? "Submitting..." : "Join Waitlist"}
       </Button>
       <p className="text-xs text-muted-foreground">
         By signing up, you agree to our{" "}
-        <a href="#" className="underline underline-offset-2">
+        <a href="#" className="underline underline-offset-2 text-[#245FCB]">
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className="underline underline-offset-2">
+        <a href="#" className="underline underline-offset-2 text-[#245FCB]">
           Privacy Policy
         </a>
         .

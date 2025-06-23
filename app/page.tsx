@@ -6,24 +6,25 @@ import SignupForm from "@/components/signup-form"
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
-            <span>Vastis</span>
+            <img src="/images/vastis-preview.png" alt="Vastis Logo" className="h-10 w-auto mr-2" style={{marginLeft: '1rem'}} />
+            <span className="sr-only">Vastis</span>
           </div>
           <nav className="hidden md:flex gap-6">
-            <Link href="#features" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link href="#features" className="text-sm font-medium text-black transition-colors hover:text-primary">
               Features
             </Link>
-            <Link href="#about" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link href="#about" className="text-sm font-medium text-black transition-colors hover:text-primary">
               About
             </Link>
-            <Link href="#faq" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link href="#faq" className="text-sm font-medium text-black transition-colors hover:text-primary">
               FAQ
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button asChild>
+            <Button asChild className="bg-[#245FCB] text-white">
               <Link href="#signup">Join Waitlist</Link>
             </Button>
             <Button variant="outline" size="icon" className="md:hidden">
@@ -42,8 +43,8 @@ export default function LandingPage() {
                 <span className="ml-2 rounded-md bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">Beta</span>
               </div>
               <div className="space-y-4">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Transform Your Digital Experience with Vastis
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-black">
+                  Be the First to Experience Vastis
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                   Join the waitlist for early access to the platform that's changing how people connect, create, and
@@ -51,7 +52,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button asChild size="lg">
+                <Button asChild size="lg" className="bg-[#245FCB] text-white">
                   <Link href="#signup">
                     Join Waitlist
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -76,12 +77,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
+        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex justify-center items-center">
+          <div className="w-full max-w-5xl flex flex-col items-center justify-center px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">What is Vastis?</h2>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-black">What is Vastis?</h2>
+                <p className="mx-auto max-w-[700px] text-black md:text-xl/relaxed">
                   Vastis is a revolutionary digital platform designed to streamline workflows, enhance collaboration,
                   and empower teams to achieve extraordinary results in today's fast-paced digital landscape.
                 </p>
@@ -92,8 +93,8 @@ export default function LandingPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <Globe className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold">Global Connectivity</h3>
-                <p className="text-muted-foreground">
+                <h3 className="text-xl font-bold text-black">Global Connectivity</h3>
+                <p className="text-black">
                   Connect with teams and clients worldwide through our unified communication platform that breaks down
                   geographical barriers.
                 </p>
@@ -102,8 +103,8 @@ export default function LandingPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <BarChart3 className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold">Smart Analytics</h3>
-                <p className="text-muted-foreground">
+                <h3 className="text-xl font-bold text-black">Smart Analytics</h3>
+                <p className="text-black">
                   Make data-driven decisions with our advanced analytics suite that provides real-time insights into
                   your business performance.
                 </p>
@@ -112,8 +113,8 @@ export default function LandingPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <Smartphone className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold">Mobile First</h3>
-                <p className="text-muted-foreground">
+                <h3 className="text-xl font-bold text-black">Mobile First</h3>
+                <p className="text-black">
                   Access all features seamlessly across devices with our mobile-first design that ensures productivity
                   anywhere, anytime.
                 </p>
@@ -122,30 +123,26 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="signup" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-flex h-9 items-center justify-center rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary">
-                  <Mail className="mr-1 h-4 w-4" />
-                  Join Our Waitlist
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Be the First to Experience Vastis
-                </h2>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                  Sign up now to get early access and exclusive benefits when we launch.
-                </p>
-              </div>
-              <div className="mx-auto w-full max-w-md space-y-2">
-                <SignupForm />
-              </div>
+        <section id="signup" className="w-full flex justify-center items-center min-h-[80vh] bg-transparent">
+          <div className="w-full max-w-xl flex flex-col items-center justify-center px-4 md:px-6 space-y-6">
+            <div className="inline-flex h-12 items-center justify-center rounded-full border-2 border-primary px-6 py-3 text-lg font-semibold text-primary mb-2">
+              <Mail className="mr-2 h-6 w-6" />
+              Join Our Waitlist
+            </div>
+            <h2 className="text-5xl md:text-6xl font-extrabold tracking-tight text-black text-center leading-tight">
+              Be the First to Experience Vastis
+            </h2>
+            <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
+              Sign up now to get early access and exclusive benefits when we launch.
+            </p>
+            <div className="w-full">
+              <SignupForm />
             </div>
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex justify-center items-center">
+          <div className="w-full max-w-5xl flex flex-col items-center justify-center px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-flex h-9 items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
@@ -174,15 +171,15 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="faq" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+        <section id="faq" className="w-full py-12 md:py-24 lg:py-32 flex justify-center items-center">
+          <div className="w-full max-w-3xl flex flex-col items-center justify-center px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-flex h-9 items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
                   FAQ
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Frequently Asked Questions</h2>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-black">Frequently Asked Questions</h2>
+                <p className="mx-auto max-w-[700px] text-black md:text-xl/relaxed">
                   Find answers to common questions about Vastis.
                 </p>
               </div>
@@ -190,8 +187,8 @@ export default function LandingPage() {
             <div className="mx-auto max-w-3xl space-y-4 py-12">
               {faqs.map((faq, index) => (
                 <div key={index} className="rounded-lg border bg-background p-6">
-                  <h3 className="font-medium">{faq.question}</h3>
-                  <p className="mt-2 text-muted-foreground">{faq.answer}</p>
+                  <h3 className="font-medium text-black">{faq.question}</h3>
+                  <p className="mt-2 text-black">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -208,7 +205,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button asChild size="lg">
+                <Button asChild size="lg" className="bg-[#245FCB] text-white">
                   <Link href="#signup">
                     Join Waitlist
                     <ArrowRight className="ml-2 h-4 w-4" />

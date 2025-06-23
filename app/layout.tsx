@@ -4,7 +4,7 @@ import './globals.css'
 
 // ✅ UPDATED METADATA BELOW
 export const metadata: Metadata = {
-  title: 'Vastis – AI-Powered Healthcare Assistant',
+  title: 'Vastis',
   description: 'Join the waitlist for Vastis, your personalized AI companion for managing healthcare effectively.',
   generator: 'Next.js',
   metadataBase: new URL('https://vastis.app'),

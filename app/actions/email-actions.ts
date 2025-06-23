@@ -13,6 +13,7 @@ type WaitlistEntry = {
   email: string
   timestamp: string
   source: string
+  userType?: string
   created_at?: string
   updated_at?: string
 }
@@ -33,7 +34,7 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email)
 }
 
-export async function subscribeToWaitlist(email: string): Promise<SubscribeResult> {
+export async function subscribeToWaitlist(email: string, userType?: string): Promise<SubscribeResult> {
   try {
     if (!email || typeof email !== "string") {
       return {
@@ -49,10 +50,18 @@ export async function subscribeToWaitlist(email: string): Promise<SubscribeResul
       }
     }
 
+    if (!userType) {
+      return {
+        success: false,
+        message: "User type is required",
+      }
+    }
+
     const waitlistEntry: WaitlistEntry = {
       email: email.toLowerCase().trim(),
       timestamp: new Date().toISOString(),
       source: "Website Waitlist",
+      userType,
     }
 
     console.log("=== NEW WAITLIST SIGNUP ATTEMPT ===")
@@ -131,6 +140,7 @@ async function sendToGoogleSheetsBackup(entry: WaitlistEntry): Promise<void> {
     formData.append("email", entry.email)
     formData.append("timestamp", entry.timestamp)
     formData.append("source", entry.source)
+    if (entry.userType) formData.append("userType", entry.userType)
 
     const response = await fetch(googleScriptUrl, {
       method: "POST",
