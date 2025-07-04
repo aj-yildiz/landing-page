@@ -175,6 +175,36 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section id="space-suggestions" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex justify-center items-center">
+          <div className="w-full max-w-xl flex flex-col items-center justify-center px-4 md:px-6 space-y-6">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Your Voice, Your Space</h2>
+              <p className="text-lg text-black font-medium">
+                Nominate your gym, studio, or community space
+              </p>
+            </div>
+            <div className="w-full space-y-4">
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#245FCB] focus:border-transparent"
+                />
+              </div>
+              <div className="space-y-2">
+                <textarea
+                  placeholder="Space suggestion"
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#245FCB] focus:border-transparent resize-none"
+                />
+              </div>
+              <Button className="w-full bg-[#245FCB] text-white hover:bg-[#1e4fa3] py-3 text-lg">
+                Submit
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <section id="cta" className="w-full py-12 md:py-24 lg:py-32 bg-muted flex flex-col items-center justify-center text-center">
           <div className="w-full flex flex-col items-center justify-center text-center">
             <div className="space-y-2">
