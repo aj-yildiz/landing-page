@@ -110,10 +110,10 @@ export default function LandingPage() {
               Join Our Waitlist
             </div>
             <h2 className="text-5xl md:text-6xl font-extrabold tracking-tight text-black text-center leading-tight">
-              Be the First to Experience Vastis
+              Shape the Future of Allied Health.
             </h2>
             <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
-              Sign up now to get early access and exclusive benefits when we launch.
+              Sign up as a practitioner, patient, or fitness space and get exclusive benefits when we launch.
             </p>
             <div className="w-full">
               <SignupForm />
