@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { ArrowRight, CheckCircle, Mail, Menu, Users, Zap, Shield, Globe, Smartphone, BarChart3 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import SignupForm from "@/components/signup-form"
+import Link from "next/link";
+import { ArrowRight, CheckCircle, Mail, Menu, Users, Zap, Shield, Globe, Smartphone, BarChart3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import SignupForm from "@/components/signup-form";
 
 export default function LandingPage() {
   return (
@@ -9,7 +9,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
-            <img src="/images/vastis-preview.png" alt="Vastis Logo" className="h-10 w-auto mr-2" style={{marginLeft: '1rem'}} />
+            <img src="/images/vastis-preview.png" alt="Vastis Logo" className="h-10 w-auto mr-2" style={{ marginLeft: '1rem' }} />
             <span className="sr-only">Vastis</span>
           </div>
           <nav className="hidden md:flex gap-6">
@@ -57,20 +57,6 @@ export default function LandingPage() {
                 </Link>
               </Button>
             </div>
-            <div className="flex items-center space-x-4 text-sm mt-6">
-              <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
-                <span>Free Trial</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
-                <span>No Credit Card</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
-                <span>Cancel Anytime</span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -80,7 +66,8 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-black">What is Vastis?</h2>
                 <p className="mx-auto max-w-[700px] text-black md:text-xl/relaxed">
-                  Vastis is a three sided digital platform designed to help gyms, practitioners and patients connect. Our flexible model allows practicioners to work with multiple gyms and gym to monetize their spaces. 
+                  Vastis is a space-sharing marketplace that empowers allied health providers to practice in fitness studios during non-peak hours.
+                  It’s a win-win-win for practitioners, patients, and fitness spaces.
                 </p>
               </div>
             </div>
@@ -89,30 +76,27 @@ export default function LandingPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <Globe className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-black">Global Connectivity</h3>
+                <h3 className="text-xl font-bold text-black">Practitioner Independence</h3>
                 <p className="text-black">
-                  Connect with teams and clients worldwide through our unified communication platform that breaks down
-                  geographical barriers.
+                  We provide practitioners with fully equipped spaces so that they can do what they love – treating patients.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <BarChart3 className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-black">Smart Analytics</h3>
+                <h3 className="text-xl font-bold text-black">Patient Convenience</h3>
                 <p className="text-black">
-                  Make data-driven decisions with our advanced analytics suite that provides real-time insights into
-                  your business performance.
+                  Find the best practitioner for you. Vastis makes accessing care simpler and more seamless than ever with the ability to search for practitioners by location, availability, and specialty.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                   <Smartphone className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-black">Mobile First</h3>
+                <h3 className="text-xl font-bold text-black">Fitness Space Optimization</h3>
                 <p className="text-black">
-                  Access all features seamlessly across devices with our mobile-first design that ensures productivity
-                  anywhere, anytime.
+                  We help fitness studios monetize their unused hours by turning downtime into revenue. We transform fitness spaces into hubs for interdisciplinary care.
                 </p>
               </div>
             </div>
@@ -196,7 +180,6 @@ export default function LandingPage() {
             <div className="space-y-2">
               <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-black text-center leading-tight">Ready to Get Started?</h2>
               <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
-                Join thousands of satisfied users who are already using Vastis to transform their digital experience.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
@@ -227,7 +210,7 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 const features = [
@@ -261,7 +244,7 @@ const features = [
     description: "Access your account and manage your projects from any device.",
     icon: <Smartphone className="h-6 w-6 text-primary" />,
   },
-]
+];
 
 const faqs = [
   {
@@ -284,4 +267,4 @@ const faqs = [
     answer:
       "We provide 24/7 customer support through multiple channels including live chat, email, and phone. Our dedicated support team is always ready to help you succeed.",
   },
-]
+];
