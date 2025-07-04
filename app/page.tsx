@@ -43,10 +43,10 @@ export default function LandingPage() {
             </div>
             <div className="space-y-4 mt-6">
               <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-black text-center leading-tight">
-                Be the First to Experience Vastis
+                Empowering allied health practitioners to launch their own practice, without the clinic overhead.
               </h1>
               <p className="mx-auto max-w-2xl text-xl md:text-2xl text-[#245FCB] text-center font-medium">
-                Join the waitlist for early access to the platform that's changing how people connect, create, and collaborate online.
+                We connect practitioners to fully equipped spaces and support them in setting up their businesses.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
@@ -67,7 +67,7 @@ export default function LandingPage() {
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-black">What is Vastis?</h2>
                 <p className="mx-auto max-w-[700px] text-black md:text-xl/relaxed">
                   Vastis is a space-sharing marketplace that empowers allied health providers to practice in fitness studios during non-peak hours.
-                  It’s a win-win-win for practitioners, patients, and fitness spaces.
+                  It's a win-win-win for practitioners, patients, and fitness spaces.
                 </p>
               </div>
             </div>
